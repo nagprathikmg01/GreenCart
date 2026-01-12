@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Bot, Leaf, Search } from 'lucide-react'; // Using Lucide icons if available
+import { X, Send, Bot, Leaf } from 'lucide-react'; // Using Lucide icons if available
 import { shoppingAgent, AGENT_STATES } from '../../ai/ShoppingAgent';
 import { ragEngine } from '../../utils/ragEngine';
 import { aiService } from '../../services/aiService';
@@ -153,8 +153,8 @@ export default function SustainabilityChat() {
                                 >
                                     <div
                                         className={`max-w-[85%] p-3 rounded-2xl text-sm shadow-sm ${msg.sender === 'user'
-                                                ? 'bg-primary-600 text-white rounded-br-none'
-                                                : 'bg-white text-gray-700 border border-gray-100 rounded-bl-none'
+                                            ? 'bg-primary-600 text-white rounded-br-none'
+                                            : 'bg-white text-gray-700 border border-gray-100 rounded-bl-none'
                                             }`}
                                     >
                                         {msg.text}

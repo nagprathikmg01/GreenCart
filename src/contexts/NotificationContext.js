@@ -19,6 +19,7 @@ export function NotificationProvider({ children }) {
     if (currentUser) {
       checkForNewSales();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
   const checkForNewSales = () => {
@@ -34,7 +35,7 @@ export function NotificationProvider({ children }) {
       const latestNotification = unprocessedNotifications[0];
       setCurrentNotification(latestNotification);
       setShowSellerNotification(true);
-      
+
       // Mark as processed
       setProcessedNotifications(prev => new Set([...prev, latestNotification.id]));
     }
@@ -55,7 +56,7 @@ export function NotificationProvider({ children }) {
   return (
     <NotificationContext.Provider value={value}>
       {children}
-      
+
       {/* Seller Notification Popup */}
       <SellerNotificationPopup
         isOpen={showSellerNotification}

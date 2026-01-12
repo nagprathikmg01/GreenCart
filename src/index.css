@@ -1,166 +1,74 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-  min-height: 100vh;
+@layer base {
+  body {
+    @apply antialiased text-secondary-800 bg-secondary-50 selection:bg-primary-500 selection:text-white font-sans;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight text-secondary-900;
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-/* Custom scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
-
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  @apply bg-transparent;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
+  @apply bg-secondary-300 rounded-full border-4 border-transparent bg-clip-content hover:bg-secondary-400;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
-/* Custom components */
 @layer components {
+  /* Premium Glass Effect */
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/50 shadow-lg;
+  }
+  
+  .glass-dark {
+    @apply bg-secondary-900/80 backdrop-blur-xl border border-white/10 shadow-xl;
+  }
+  
+  /* Gradient Buttons */
   .btn-primary {
-    @apply bg-gradient-to-r from-primary-500 to-eco-500 hover:from-primary-600 hover:to-eco-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 relative overflow-hidden;
+    @apply relative overflow-hidden bg-gradient-to-r from-primary-600 to-eco-600 text-white font-semibold py-3 px-6 rounded-xl shadow-glow hover:shadow-glow-hover transform hover:-translate-y-0.5 transition-all duration-300;
   }
   
-  .btn-primary::before {
+  .btn-primary::after {
     content: '';
-    @apply absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full transition-transform duration-700;
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-150%] transition-transform duration-700 ease-in-out;
   }
   
-  .btn-primary:hover::before {
-    @apply translate-x-full;
+  .btn-primary:hover::after {
+    @apply translate-x-[150%];
+  }
+
+  /* Cards */
+  .card-premium {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-soft hover:shadow-medium transition-all duration-300;
   }
   
-  .btn-secondary {
-    @apply bg-gradient-to-r from-accent-400 to-accent-500 hover:from-accent-500 hover:to-accent-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 relative overflow-hidden;
-  }
-  
-  .btn-secondary::before {
-    content: '';
-    @apply absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full transition-transform duration-700;
-  }
-  
-  .btn-secondary:hover::before {
-    @apply translate-x-full;
-  }
-  
-  .card {
-    @apply bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 overflow-hidden transform hover:-translate-y-2 transition-all duration-300 hover:scale-105;
-  }
-  
-  .card-eco {
-    @apply bg-gradient-to-br from-eco-50 to-primary-50 rounded-2xl shadow-lg hover:shadow-2xl border border-eco-200 overflow-hidden transform hover:-translate-y-2 transition-all duration-300 hover:scale-105;
-  }
-  
-  .card-glass {
-    @apply bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg hover:shadow-2xl border border-white/20 overflow-hidden transform hover:-translate-y-2 transition-all duration-300;
-  }
-  
+  /* Text Gradients */
   .text-gradient {
-    @apply bg-gradient-to-r from-primary-600 to-eco-600 bg-clip-text text-transparent;
-  }
-  
-  .text-gradient-rainbow {
-    @apply bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 bg-clip-text text-transparent;
-  }
-  
-  .floating {
-    @apply animate-float;
-  }
-  
-  .bounce-slow {
-    @apply animate-bounce-slow;
-  }
-  
-  .pulse-slow {
-    @apply animate-pulse-slow;
-  }
-  
-  .glow {
-    @apply shadow-lg shadow-primary-500/25;
-  }
-  
-  .glow-eco {
-    @apply shadow-lg shadow-eco-500/25;
-  }
-  
-  .neon-border {
-    @apply border-2 border-transparent bg-gradient-to-r from-primary-500 to-eco-500 bg-clip-border;
-  }
-  
-  .shimmer {
-    @apply relative overflow-hidden;
-  }
-  
-  .shimmer::before {
-    content: '';
-    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full animate-shimmer;
-  }
-  
-  .morphing-bg {
-    @apply bg-gradient-to-br from-primary-50 via-eco-50 to-accent-50 animate-morphing;
-  }
-  
-  .floating-card {
-    @apply transform hover:rotate-1 hover:scale-105 transition-all duration-500;
-  }
-  
-  .parallax-bg {
-    @apply bg-fixed bg-center bg-cover;
-  }
-  
-  .glass-effect {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
-  }
-  
-  .gradient-border {
-    @apply relative;
-  }
-  
-  .gradient-border::before {
-    content: '';
-    @apply absolute inset-0 bg-gradient-to-r from-primary-500 to-eco-500 rounded-2xl p-0.5;
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: exclude;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-eco-600;
   }
 }
 
-/* Mobile responsiveness */
-@media (max-width: 640px) {
-  .container {
-    @apply px-4;
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
-  
-  .card {
-    @apply mx-2;
+  .animation-delay-2000 {
+    animation-delay: 2s;
   }
-}
-
-/* Desktop enhancements */
-@media (min-width: 1024px) {
-  .card:hover {
-    @apply scale-105;
+  .animation-delay-4000 {
+    animation-delay: 4s;
   }
 }
