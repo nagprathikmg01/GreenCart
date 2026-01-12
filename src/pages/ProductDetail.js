@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ArrowLeft, ShoppingCart, Rocket, AlertCircle, Leaf } from 'lucide-react';
 import { storage } from '../utils/storage';
 import { calculateItemSustainability } from '../utils/sustainability';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
+import ProductInsight from '../components/AI/ProductInsight';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -11,6 +14,7 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [alternatives, setAlternatives] = useState([]);
   const { currentUser } = useAuth();
   const { addToCart } = useCart();
 
@@ -20,6 +24,16 @@ export default function ProductDetail() {
       const foundProduct = storage.getProduct(id);
       if (foundProduct) {
         setProduct(foundProduct);
+
+        // Find Sustainable Alternatives (Simple Logic)
+        const allProducts = storage.getAvailableProducts();
+        const alts = allProducts
+          .filter(p => p.id !== foundProduct.id && p.category === foundProduct.category)
+          .map(p => ({ ...p, score: calculateItemSustainability(p).contribution }))
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 3);
+        setAlternatives(alts);
+
       } else {
         setError('Product not found');
       }
@@ -40,7 +54,7 @@ export default function ProductDetail() {
       alert('Please log in to add items to cart');
       return;
     }
-    
+
     try {
       await addToCart(product.id);
       alert('Product added to cart!');
@@ -55,7 +69,6 @@ export default function ProductDetail() {
       alert('Please log in to purchase items');
       return;
     }
-    // For now, just add to cart and navigate to cart
     handleAddToCart();
     navigate('/cart');
   };
@@ -73,7 +86,6 @@ export default function ProductDetail() {
       <div className="text-center py-12">
         <div className="text-gray-400 text-6xl mb-4">❌</div>
         <h3 className="text-xl font-semibold text-gray-600 mb-2">Product not found</h3>
-        <p className="text-gray-500 mb-6">{error || 'The product you are looking for does not exist.'}</p>
         <button
           onClick={() => navigate('/')}
           className="bg-primary-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-600 transition-colors"
@@ -85,154 +97,168 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex items-center mb-8 animate-fade-in">
+    <div className="max-w-7xl mx-auto px-4">
+      {/* Navigation */}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="flex items-center mb-8"
+      >
         <button
           onClick={() => navigate(-1)}
-          className="mr-4 p-3 hover:bg-primary-50 rounded-xl transition-all duration-200 group hover:scale-105"
+          className="mr-4 p-3 hover:bg-white rounded-xl transition-all duration-200 group shadow-sm border border-transparent hover:border-gray-200"
         >
-          <svg className="w-6 h-6 text-gray-600 group-hover:text-primary-600 group-hover:animate-wiggle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          <ArrowLeft className="w-6 h-6 text-gray-600 group-hover:text-primary-600" />
         </button>
         <div>
-          <h1 className="text-3xl font-display font-bold text-gradient">Product Details</h1>
-          <p className="text-gray-600 mt-1">Explore this amazing product</p>
+          <h1 className="text-3xl font-display font-bold text-gray-800">Product Details</h1>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="card overflow-hidden animate-scale-in">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
-          {/* Enhanced Product Image */}
-          <div className="relative group">
-            <div className="w-full h-96 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center overflow-hidden relative">
-              {product.imageUrl && product.imageUrl !== 'https://via.placeholder.com/400x300?text=No+Image' ? (
-                <img
-                  src={product.imageUrl}
-                  alt={product.title}
-                  className="w-full h-full object-cover rounded-2xl group-hover:scale-110 transition-transform duration-500"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
-                  }}
-                />
-              ) : null}
-              <div className="w-full h-full flex items-center justify-center text-gray-400 text-lg">
-                <div className="text-center">
-                  <div className="text-6xl mb-4">📷</div>
-                  <p>Image Placeholder</p>
-                </div>
-              </div>
-              
-              {/* Hover overlay effect */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
-              
-              {/* Floating action buttons */}
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                <button className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200 mb-2">
-                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </button>
-                <button className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200">
-                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
-                  </svg>
-                </button>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Left Column: Image */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="relative group h-fit"
+        >
+          <div className="aspect-square bg-white rounded-3xl shadow-xl overflow-hidden relative border border-gray-100">
+            {product.imageUrl && product.imageUrl !== 'https://via.placeholder.com/400x300?text=No+Image' ? (
+              <img
+                src={product.imageUrl}
+                alt={product.title}
+                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+            ) : null}
+            <div className="w-full h-full hidden items-center justify-center bg-gray-50 text-gray-400">
+              <div className="text-center">
+                <span className="text-5xl block mb-2">📷</span>
+                Image Placeholder
               </div>
             </div>
-          </div>
 
-          {/* Enhanced Product Info */}
-          <div className="space-y-8">
-            <div className="animate-slide-up">
-              <h2 className="text-4xl font-display font-bold text-gradient mb-4 group-hover:scale-105 transition-transform duration-300">{product.title}</h2>
-              <div className="flex items-center gap-4 mb-6">
-                <span className="text-4xl font-bold text-gradient group-hover:scale-110 transition-transform duration-300">₹{product.price}</span>
-                <span className="card-glass text-gray-700 px-4 py-2 rounded-full text-sm font-semibold group-hover:animate-wiggle">
+            {/* Sustainability Badge on Image */}
+            <div className="absolute top-4 left-4">
+              <span className="bg-white/90 backdrop-blur-md text-eco-700 px-4 py-2 rounded-full font-bold shadow-lg flex items-center gap-2 text-sm border border-eco-100">
+                <Leaf size={16} className="fill-eco-500 text-eco-500" />
+                +{calculateItemSustainability(product).contribution}% Impact
+              </span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Right Column: Info & AI */}
+        <div className="space-y-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="text-4xl font-display font-bold text-gray-900 mb-2">{product.title}</h2>
+                <span className="inline-block bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium">
                   {product.category}
                 </span>
               </div>
-              <p className="text-gray-600 text-lg leading-relaxed group-hover:text-gray-700 transition-colors duration-300">{product.description}</p>
-            </div>
-
-            {/* Enhanced Sustainability Impact */}
-            <div className="card-eco p-6 group hover:scale-105 transition-all duration-300">
-              <div className="flex items-center mb-4">
-                <div className="flex-shrink-0 p-3 bg-gradient-to-br from-eco-500 to-primary-500 rounded-2xl shadow-lg group-hover:animate-bounce-gentle">
-                  <svg className="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <h3 className="ml-3 text-xl font-bold text-eco-800 flex items-center gap-2">
-                  <span className="animate-pulse-slow">🌱</span> Sustainability Impact
-                </h3>
-              </div>
-              <div className="text-center">
-                <div className="text-5xl font-bold text-gradient mb-3 group-hover:scale-110 transition-transform duration-300">
-                  +{calculateItemSustainability(product).contribution}%
-                </div>
-                <p className="text-eco-700 text-base group-hover:text-eco-800 transition-colors duration-300">
-                  {calculateItemSustainability(product).explanation}
-                </p>
+              <div className="text-right">
+                <span className="text-4xl font-bold text-primary-600">₹{product.price}</span>
               </div>
             </div>
 
-            <div className="border-t pt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Seller Information</h3>
-              <p className="text-gray-600">Sold by: {product.sellerName || 'Unknown Seller'}</p>
-              <p className="text-sm text-gray-500">
-                Listed on: {new Date(product.createdAt).toLocaleDateString()}
-              </p>
-            </div>
+            <p className="text-gray-600 text-lg leading-relaxed mt-6">{product.description}</p>
+          </motion.div>
 
-            {/* Product Availability Status */}
+          {/* AI Insight Component */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <ProductInsight product={product} />
+          </motion.div>
+
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="flex gap-4 pt-4"
+          >
             {!product.isAvailable ? (
-              <div className="bg-red-50 border-l-4 border-red-400 rounded-r-lg p-4 mb-6 animate-slide-up">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <svg className="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">This product has been sold</h3>
-                    <p className="text-red-600 text-sm mt-1">
-                      This item is no longer available for purchase.
-                    </p>
-                  </div>
-                </div>
+              <div className="w-full bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3 text-red-700">
+                <AlertCircle />
+                <span className="font-semibold">This product has been sold.</span>
               </div>
             ) : (
-              <div className="flex gap-4 animate-fade-in">
+              <>
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 py-4 px-6 rounded-xl font-semibold hover:from-gray-200 hover:to-gray-300 transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-lg flex items-center justify-center gap-2 group"
+                  className="flex-1 bg-white border-2 border-primary-500 text-primary-700 py-4 px-6 rounded-xl font-bold hover:bg-primary-50 transition-all duration-200 flex items-center justify-center gap-2"
                 >
-                  <svg className="w-5 h-5 group-hover:animate-bounce-gentle" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
-                  </svg>
+                  <ShoppingCart size={20} />
                   Add to Cart
                 </button>
                 <button
                   onClick={handleBuyNow}
-                  className="flex-1 btn-primary py-4 px-6 shimmer group"
+                  className="flex-1 bg-gradient-to-r from-primary-600 to-eco-600 text-white py-4 px-6 rounded-xl font-bold hover:shadow-lg hover:shadow-primary-500/30 transition-all duration-200 flex items-center justify-center gap-2 shadow-md"
                 >
-                  <span className="group-hover:animate-bounce-gentle inline-block">🚀</span> Buy Now
+                  <Rocket size={20} />
+                  Buy Now
                 </button>
-              </div>
+              </>
             )}
+          </motion.div>
 
-            {!currentUser && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <p className="text-yellow-800 text-sm">
-                  <strong>Note:</strong> You need to be logged in to add items to cart or make purchases.
-                </p>
-              </div>
-            )}
+          {/* Seller Metadata */}
+          <div className="pt-6 border-t border-gray-100 text-sm text-gray-500 flex justify-between">
+            <span>Sold by: <span className="font-medium text-gray-900">{product.sellerName || 'Unknown'}</span></span>
+            <span>Listed: {new Date(product.createdAt).toLocaleDateString()}</span>
           </div>
         </div>
       </div>
+
+      {/* Sustainable Alternatives Section */}
+      {alternatives.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-20 mb-12"
+        >
+          <div className="flex items-center gap-3 mb-8">
+            <h3 className="text-2xl font-bold text-gray-800">Sustainable Alternatives</h3>
+            <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded border border-green-200">Recommended for you</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {alternatives.map((alt) => (
+              <div
+                key={alt.id}
+                onClick={() => navigate(`/product/${alt.id}`)}
+                className="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-xl transition-all cursor-pointer group"
+              >
+                <div className="aspect-video bg-gray-100 rounded-xl mb-4 overflow-hidden">
+                  <img src={alt.imageUrl} alt={alt.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                </div>
+                <h4 className="font-bold text-gray-800 mb-1 truncate">{alt.title}</h4>
+                <div className="flex justify-between items-center">
+                  <span className="text-primary-600 font-bold">₹{alt.price}</span>
+                  <span className="text-xs text-eco-600 font-medium flex items-center gap-1">
+                    <Leaf size={12} /> +{alt.score}% Eco Score
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }
+

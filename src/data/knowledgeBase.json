@@ -1,0 +1,32 @@
+[
+  {
+    "id": "sdg-12-def",
+    "keywords": ["sdg", "12", "goal", "definition", "what is"],
+    "content": "SDG 12 is 'Responsible Consumption and Production'. It focuses on decoupling economic growth from environmental degradation, increasing resource efficiency, and promoting sustainable lifestyles."
+  },
+  {
+    "id": "sdg-12-targets",
+    "keywords": ["target", "waste", "food", "recycling", "reduce"],
+    "content": "Key targets of SDG 12 include halving global food waste per capita, achieving environmentally sound management of chemicals and wastes, and substantially reducing waste generation through prevention, reduction, recycling, and reuse."
+  },
+  {
+    "id": "greencart-mission",
+    "keywords": ["greencart", "mission", "about", "vision"],
+    "content": "GreenCart's mission is to democratize sustainable shopping. By buying second-hand, you extend the lifecycle of products, reducing the demand for new resource extraction and minimizing landfill waste."
+  },
+  {
+    "id": "recycling-tips",
+    "keywords": ["recycle", "bin", "plastic", "paper", "tips"],
+    "content": "General Recycling Tips: 1. Rinse all containers. 2. Flatten cardboard boxes. 3. Do not bag recyclables (keep them loose). 4. Check for the recycling symbol (mobius loop) but always verify with local guidelines."
+  },
+  {
+    "id": "fast-fashion",
+    "keywords": ["fashion", "clothing", "clothes", "textile"],
+    "content": "The fashion industry is responsible for 10% of annual global carbon emissions. Buying second-hand clothing (thrifting) is one of the most effective ways to combat fast fashion and reduce water consumption."
+  },
+  {
+    "id": "electronics-waste",
+    "keywords": ["electronics", "e-waste", "phone", "laptop"],
+    "content": "E-waste is the fastest-growing waste stream. It contains hazardous materials like lead and mercury but also valuable elements like gold and copper. Properly reusing or recycling electronics is crucial."
+  }
+]

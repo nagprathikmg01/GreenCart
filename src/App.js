@@ -18,6 +18,7 @@ import SustainabilityDashboard from './pages/SustainabilityDashboard';
 import DataViewer from './pages/DataViewer';
 import SellerNotifications from './pages/SellerNotifications';
 import PrivateRoute from './components/PrivateRoute';
+import SustainabilityChat from './components/AI/SustainabilityChat';
 
 function App() {
   return (
@@ -25,62 +26,64 @@ function App() {
       <CartProvider>
         <NotificationProvider>
           <Router>
-          <div className="min-h-screen bg-gradient-to-br from-primary-50 via-eco-50 to-accent-50">
-            <Navbar />
-            <main className="container mx-auto px-4 py-8">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/dashboard" element={
-                  <PrivateRoute>
-                    <Dashboard />
-                  </PrivateRoute>
-                } />
-                <Route path="/add-product" element={
-                  <PrivateRoute>
-                    <AddProduct />
-                  </PrivateRoute>
-                } />
-                <Route path="/my-listings" element={
-                  <PrivateRoute>
-                    <MyListings />
-                  </PrivateRoute>
-                } />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/cart" element={
-                  <PrivateRoute>
-                    <Cart />
-                  </PrivateRoute>
-                } />
-                <Route path="/checkout" element={
-                  <PrivateRoute>
-                    <Checkout />
-                  </PrivateRoute>
-                } />
-                <Route path="/purchases" element={
-                  <PrivateRoute>
-                    <PreviousPurchases />
-                  </PrivateRoute>
-                } />
-                <Route path="/sustainability" element={
-                  <PrivateRoute>
-                    <SustainabilityDashboard />
-                  </PrivateRoute>
-                } />
-                <Route path="/data-viewer" element={
-                  <PrivateRoute>
-                    <DataViewer />
-                  </PrivateRoute>
-                } />
-                <Route path="/seller-notifications" element={
-                  <PrivateRoute>
-                    <SellerNotifications />
-                  </PrivateRoute>
-                } />
-              </Routes>
-            </main>
-          </div>
+            <div className="min-h-screen bg-gradient-to-br from-primary-50 via-eco-50 to-accent-50 relative">
+              <Navbar />
+              <main className="container mx-auto px-4 py-8">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/dashboard" element={
+                    <PrivateRoute>
+                      <Dashboard />
+                    </PrivateRoute>
+                  } />
+                  <Route path="/add-product" element={
+                    <PrivateRoute>
+                      <AddProduct />
+                    </PrivateRoute>
+                  } />
+                  <Route path="/my-listings" element={
+                    <PrivateRoute>
+                      <MyListings />
+                    </PrivateRoute>
+                  } />
+                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/cart" element={
+                    <PrivateRoute>
+                      <Cart />
+                    </PrivateRoute>
+                  } />
+                  <Route path="/checkout" element={
+                    <PrivateRoute>
+                      <Checkout />
+                    </PrivateRoute>
+                  } />
+                  <Route path="/purchases" element={
+                    <PrivateRoute>
+                      <PreviousPurchases />
+                    </PrivateRoute>
+                  } />
+                  <Route path="/sustainability" element={
+                    <PrivateRoute>
+                      <SustainabilityDashboard />
+                    </PrivateRoute>
+                  } />
+                  <Route path="/data-viewer" element={
+                    <PrivateRoute>
+                      <DataViewer />
+                    </PrivateRoute>
+                  } />
+                  <Route path="/seller-notifications" element={
+                    <PrivateRoute>
+                      <SellerNotifications />
+                    </PrivateRoute>
+                  } />
+                </Routes>
+              </main>
+              {/* Global AI Chat Widget */}
+              <SustainabilityChat />
+            </div>
           </Router>
         </NotificationProvider>
       </CartProvider>
