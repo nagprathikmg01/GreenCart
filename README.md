@@ -101,21 +101,7 @@ GreenCart is designed to be **visually engaging** and **modern**, proving that s
 
 ---
 
-## 📸 Screenshots
 
-| **Home Page** | **Sustainability Chat** |
-|:---:|:---:|
-| ![Home Page](https://via.placeholder.com/600x350?text=Home+Page+Preview) | ![AI Chat](https://via.placeholder.com/600x350?text=Sustainability+Chat+Preview) |
-| *Modern landing page with eco-products* | *Agentic AI answering user queries* |
-
-| **Product Analysis** | **Mobile View** |
-|:---:|:---:|
-| ![Analysis](https://via.placeholder.com/600x350?text=Product+Eco-Analysis) | ![Mobile UI](https://via.placeholder.com/600x350?text=Mobile+Responsive+View) |
-| *Detailed breakdown of environmental impact* | *Seamless experience on smaller screens* |
-
-*(Note: Replace placeholders with actual project screenshots)*
-
----
 
 ## 🚀 How to Run the Project Locally
 
@@ -171,4 +157,4 @@ As an AI-focused project, we prioritize ethical considerations:
 The "AI" responses are simulated for demonstration purposes to showcase the *potential* of such a system. The carbon footprint calculations are estimates based on general sustainability data and should not be used for scientific auditing.
 
 ---
-**Made with 💚 by a 1M1B Future Tech Leader.**
+
